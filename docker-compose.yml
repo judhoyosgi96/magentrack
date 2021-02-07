@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgis/postgis
+    container_name: PostgreSQL
+    environment: 
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: "pg_isready -q -h db -U postgres"
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  web:
+    container_name: Python
+    build: .
+    command: sh entrypoint.sh
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on: 
+      db: 
+        condition: service_healthy
+
+
+   
