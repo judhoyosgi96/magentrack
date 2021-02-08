@@ -12,7 +12,8 @@ docker-compose up
 ### Endpoints
 | Description | Endpoint |
 | ------ | ------ |
-| Admin: username:admin password:admin | [/admin][Admin] |
+| Admin: 
+username: ```admin``` password: ```admin``` | [/admin][Admin] |
 | Datasets | [/api/v1/datasets?page=\<page\>][Data] |
 | Row | [/api/v1/rows/?dataset_id=<dataset_id>&name=<client_name>&point=<Point(Longitude,Latitude)>][Row] |
 | Log | [/log][Log] |
