@@ -14,11 +14,12 @@ from apps.dataset.models import Dataset
 from apps.row.models import Row
 from apps.variable.models import Variable
 
+from pymongo import MongoClient
 
 import csv
 
 from django.contrib.gis.geos import Point
-import os
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -32,9 +33,13 @@ def log(request):
     ip = get_client_ip(request)
     time = timezone.now().strftime('%Y-%m-%d,%H:%M:%S%z')
     user = request.user.get_username()
-    if user is '':
+    if user == '':
         user = 'None'
-    os.system('python /code/manage.py log '+ ip + ' ' + time + ' ' + user) # Uses /apps/variable/management/commands/log.py to store the api consumption log
+    client = MongoClient(settings.MONGO_DB_HOST, settings.MONGO_DB_PORT)
+    db = client[settings.MONGO_DB_NAME]
+    collection = db[settings.MONGO_DB_COLLECTION_NAME]
+    newlog = { "ip": ip, "time": time, "user": user }
+    collection.insert_one(newlog)
 
 class DatasetAPIView(APIView):
     """This is the view for dataset api"""

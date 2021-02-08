@@ -28,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+MONGO_DB_HOST = 'logger'
+MONGO_DB_NAME = 'log'
+MONGO_DB_COLLECTION_NAME = 'log'
+MONGO_DB_PORT = 27017
 
 # Application definition
 
@@ -60,7 +64,6 @@ INSTALLED_APPS = [
     'apps.dataset',
     'apps.row',  
     'apps.variable',
-    'mongolog',
     'bootstrap4',
 ]
 
@@ -151,29 +154,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/code/static/'
 
-
-# Mongo Logging
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'mongolog': {
-            'level': 'DEBUG',
-            'class': 'mongolog.SimpleMongoLogHandler',
-
-            # Set the connection string to the mongo instance.
-            'connection': 'mongodb://logger:27017',
-
-            # define mongo collection the log handler should use.  Default is mongolog
-            # This is useful if you want different handlers to use different collections
-            'collection': 'mongolog'
-        },
-    },
-    # Define a logger for your handler.  We are using the root '' logger in this case
-    'loggers': {
-        '': {
-            'handlers': ['mongolog'],
-            'level': 'DEBUG',
-            'propagate': True
-        },
-    },
-}
