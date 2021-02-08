@@ -15,6 +15,15 @@ services:
       timeout: 5s
       retries: 5
 
+  logger:
+    image: mongo
+    container_name: MongoDB
+    ports:
+      - "27017:27017"
+    depends_on:
+      db: 
+        condition: service_healthy
+      
   web:
     container_name: Python
     build: .
@@ -23,9 +32,8 @@ services:
       - .:/code
     ports:
       - "8000:8000"
-    depends_on: 
-      db: 
-        condition: service_healthy
-
+    depends_on:
+      - logger
+      
 
    

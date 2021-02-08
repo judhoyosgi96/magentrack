@@ -1,3 +1,7 @@
+FROM postgis/postgis
+
+RUN echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
+
 FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1

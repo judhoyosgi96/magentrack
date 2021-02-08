@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,6 +31,22 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    #'ALGORITHM': 'RS256',
+    #'SIGNING_KEY': open('/code/jwtRS256.key').read(),
+    #'VERIFYING_KEY': open('/code/jwtRS256.key.pub').read(),
+}
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,9 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
+    'rest_framework_simplejwt',
     'apps.dataset',
-    'apps.row',
-   
+    'apps.row',  
+    'apps.variable',
 ]
 
 MIDDLEWARE = [
@@ -56,10 +74,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'djangoDocker.urls'
 
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/code/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
