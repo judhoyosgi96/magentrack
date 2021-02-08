@@ -1,0 +1,32 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
+  
+ 
+    <title>Api Log</title> 
+	  {% load bootstrap4 %}
+	  {% bootstrap_css %} 
+  </head>
+  <body>
+        <table class="table table-striped" id="table"
+        data-toggle="table"
+        data-url="http://localhost:8000/api/v1/datasets/"
+        data-side-pagination="server">
+        <thead>
+            <tr>
+                <th data-field="ip">IP</th>
+                <th data-field="date">Date</th>
+                <th data-field="user">User</th>          
+            </tr>
+        </thead>
+    </table>
+            {# JS y jQuery Bootstrap #}
+	  {% bootstrap_javascript jquery='full' %}
+      <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+    
+  </body>
+</html>

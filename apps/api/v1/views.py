@@ -18,13 +18,31 @@ from apps.variable.models import Variable
 import csv
 
 from django.contrib.gis.geos import Point
+import os
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def log(request):    
+    ip = get_client_ip(request)
+    time = timezone.now().strftime('%Y-%m-%d,%H:%M:%S%z')
+    user = request.user.get_username()
+    if user is '':
+        user = 'None'
+    os.system('python /code/manage.py log '+ ip + ' ' + time + ' ' + user) # Uses /apps/variable/management/commands/log.py to store the api consumption log
 
 class DatasetAPIView(APIView):
     """This is the view for dataset api"""
     serializer_class = serializers.DatasetSerializer
 
     def get(self, request, format=None):
+        log(request)    
+
         data = Dataset.objects.all()
         data_json = [model_to_dict(my_record) for my_record in data]
 
@@ -49,6 +67,8 @@ class DatasetAPIView(APIView):
 
     
     def post(self, request):
+        log(request)
+
         serializer = self.serializer_class(data=request.data)        
         if serializer.is_valid():
             now = timezone.now()
@@ -75,6 +95,8 @@ class DatasetAPIView(APIView):
 class RowAPIView(APIView):
     """This is the view for row api"""
     def get(self, request, format=None):
+        log(request)
+        
         dataset_id = self.request.query_params.get('dataset_id', None)
         if dataset_id is None or not dataset_id.isnumeric():
             return Response(

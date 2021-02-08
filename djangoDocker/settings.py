@@ -33,9 +33,9 @@ ALLOWED_HOSTS = ['*']
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+      'rest_framework_simplejwt.authentication.JWTAuthentication',
+  ),
 }
 
 SIMPLE_JWT = {
@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'apps.dataset',
     'apps.row',  
     'apps.variable',
+    'mongolog',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +81,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/code/templates/'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,3 +150,30 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/code/static/'
+
+
+# Mongo Logging
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'mongolog': {
+            'level': 'DEBUG',
+            'class': 'mongolog.SimpleMongoLogHandler',
+
+            # Set the connection string to the mongo instance.
+            'connection': 'mongodb://logger:27017',
+
+            # define mongo collection the log handler should use.  Default is mongolog
+            # This is useful if you want different handlers to use different collections
+            'collection': 'mongolog'
+        },
+    },
+    # Define a logger for your handler.  We are using the root '' logger in this case
+    'loggers': {
+        '': {
+            'handlers': ['mongolog'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+    },
+}

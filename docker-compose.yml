@@ -16,6 +16,8 @@ services:
       retries: 5
 
   logger:
+    logging:
+      driver: none
     image: mongo
     container_name: MongoDB
     ports:
