@@ -18,7 +18,7 @@ docker-compose up
 | Log | [/log][Log] |
 
 
-   [Admin]: <http://http://localhost:8000/admin/>
+   [Admin]: <http://localhost:8000/admin/>
    [Data]: <http://localhost:8000/api/v1/datasets/>
    [Row]: <http://localhost:8000/api/v1/rows/>
    [Log]: <http://localhost:8000/log/>
