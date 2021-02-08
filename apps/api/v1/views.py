@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from . import serializers
 from django.utils import timezone
@@ -13,6 +14,8 @@ from django.forms.models import model_to_dict
 from apps.dataset.models import Dataset
 from apps.row.models import Row
 from apps.variable.models import Variable
+
+from rest_framework.permissions import IsAuthenticated
 
 from pymongo import MongoClient
 
@@ -31,7 +34,7 @@ def get_client_ip(request):
 
 def log(request):    
     ip = get_client_ip(request)
-    time = timezone.now().strftime('%Y-%m-%d,%H:%M:%S%z')
+    time = timezone.now()
     user = request.user.get_username()
     if user == '':
         user = 'None'
@@ -43,6 +46,8 @@ def log(request):
 
 class DatasetAPIView(APIView):
     """This is the view for dataset api"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.DatasetSerializer
 
     def get(self, request, format=None):
@@ -99,6 +104,9 @@ class DatasetAPIView(APIView):
 
 class RowAPIView(APIView):
     """This is the view for row api"""
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, format=None):
         log(request)
         
